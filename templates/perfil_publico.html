@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="perfil-page">
+
+    <div class="perfil-card">
+
+        {% if perfil.foto %}
+
+            <img
+                src="{{ perfil.foto.url }}"
+                class="perfil-foto"
+            >
+
+        {% endif %}
+
+        <h1>
+
+            {{ usuario_perfil.username }}
+
+        </h1>
+
+        <p>
+
+            {{ perfil.bio }}
+
+        </p>
+
+        <p>
+
+            📍
+            {{ perfil.cidade }}
+            -
+            {{ perfil.estado }}
+
+        </p>
+
+    </div>
+
+    <div class="perfil-cartas">
+
+        <h2>
+
+            💌 Cartinhas
+
+        </h2>
+
+        {% for carta in cartas %}
+
+            <div class="card">
+
+                <h3>
+
+                    <a href="{% url 'detalhe_carta' carta.id %}">
+
+                        {{ carta.titulo }}
+
+                    </a>
+
+                </h3>
+
+                <p>
+
+                    {{ carta.texto|truncatewords:30 }}
+
+                </p>
+
+            </div>
+
+        {% empty %}
+
+            <p>
+
+                Nenhuma cartinha publicada.
+
+            </p>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+<h1>Notificações</h1>
+
+{% if notificacoes %}
+
+    {% for notificacao in notificacoes %}
+
+        <p>
+
+            {{ notificacao.mensagem }}
+
+        </p>
+
+        <small>
+
+            {{ notificacao.criado_em }}
+
+        </small>
+
+        <hr>
+
+    {% endfor %}
+
+{% else %}
+
+    <p>
+        Você não possui notificações.
+    </p>
+
+{% endif %}

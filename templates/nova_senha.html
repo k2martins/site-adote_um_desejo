@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="auth-container">
+
+    <div class="auth-card">
+
+        <h1>
+            Nova Senha
+        </h1>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button type="submit">
+                Alterar Senha
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

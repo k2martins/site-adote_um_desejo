@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- HERO -->
+<div class="hero">
+
+    <h1>
+        Realize sonhos com pequenos gestos 💜
+    </h1>
+
+    <p class="hero-text">
+        O Adote Um Desejo conecta pessoas que precisam
+        de ajuda com pessoas dispostas a transformar vidas.
+    </p>
+
+<div class="hero-buttons">
+
+    {% if request.user.is_authenticated %}
+
+        <a
+            href="{% url 'criar_carta' %}"
+            class="btn-hero"
+        >
+            Criar Cartinha
+        </a>
+
+    {% else %}
+
+        <a
+            href="{% url 'cadastro' %}"
+            class="btn-hero"
+        >
+            Criar Conta
+        </a>
+
+    {% endif %}
+
+</div>
+
+    <!-- PESQUISA -->
+    <div class="pesquisa-home">
+
+        <form method="GET">
+
+            <input
+                type="text"
+                name="pesquisa"
+                placeholder="Pesquisar desejos..."
+            >
+
+            <input
+                type="text"
+                name="cidade"
+                placeholder="Cidade"
+            >
+
+            <input
+                type="text"
+                name="estado"
+                placeholder="Estado"
+            >
+
+            <select name="adotado">
+
+                <option value="">
+                    Todos
+                </option>
+
+                <option value="sim">
+                    Adotados
+                </option>
+
+                <option value="nao">
+                    Não adotados
+                </option>
+
+            </select>
+
+            <button type="submit">
+
+                Pesquisar
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- ESTATÍSTICAS -->
+<div class="stats">
+
+    <div class="stat-card">
+        <h2>❤️ 120+</h2>
+        <p>Desejos adotados</p>
+    </div>
+
+    <div class="stat-card">
+        <h2>📨 350+</h2>
+        <p>Cartinhas publicadas</p>
+    </div>
+
+    <div class="stat-card">
+        <h2>🤝 200+</h2>
+        <p>Pessoas ajudadas</p>
+    </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+
+    <div class="footer-container">
+
+        <!-- LOGO / NOME -->
+        <div class="footer-section">
+
+            <h2>
+                💜 Adote Um Desejo
+            </h2>
+
+            <p>
+                Pequenos gestos podem transformar vidas.
+            </p>
+
+        </div>
+
+        <!-- LINKS -->
+        <div class="footer-section">
+
+            <h3>
+                Navegação
+            </h3>
+
+            <a href="{% url 'home' %}">
+                Home
+            </a>
+
+            <a href="{% url 'feed' %}">
+                Cartinhas
+            </a>
+
+            <a href="{% url 'faq' %}">
+                Dúvidas Frequentes
+            </a>
+
+        </div>
+
+        <!-- CONTATO -->
+        <div class="footer-section">
+
+            <h3>
+                Contato
+            </h3>
+
+            <p>
+                contato@adoteumdesejo.com
+            </p>
+
+            <p>
+                Recife - PE
+            </p>
+
+        </div>
+
+    </div>
+
+    <hr>
+
+    <p class="footer-copy">
+        © 2026 Adote Um Desejo — Todos os direitos reservados
+    </p>
+
+</footer>
+
+{% endblock %}

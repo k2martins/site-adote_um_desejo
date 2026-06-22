@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="criar-carta-container">
+
+    <div class="criar-carta-card">
+
+        <h1>
+            Compartilhe Seu Desejo
+        </h1>
+
+        <p class="criar-subtitle">
+
+            Escreva sua cartinha com carinho.
+            Talvez alguém transforme seu desejo
+            em realidade. 💜
+
+        </p>
+
+        {% if erro_limite %}
+
+            <div class="erro-limite">
+
+                ⚠️ Você só pode publicar
+                uma cartinha por semana.
+
+            </div>
+
+        {% endif %}
+
+        <p class="local-auto">
+
+            📍 Local detectado automaticamente:
+            {{ request.user.perfil.cidade }}
+            -
+            {{ request.user.perfil.estado }}
+
+        </p>
+
+        <form
+            method="POST"
+            enctype="multipart/form-data"
+            class="criar-form"
+        >
+
+            {% csrf_token %}
+
+            <label>
+                Título da Cartinha
+            </label>
+
+            {{ form.titulo }}
+
+            <label>
+                Conte sua história
+            </label>
+
+            {{ form.texto }}
+
+            <label>
+                Adicione uma foto
+            </label>
+
+            {{ form.imagem }}
+
+            <img
+                id="preview-imagem"
+                style="
+                    display:none;
+                    margin-top:15px;
+                    border-radius:15px;
+                    width:100%;
+                "
+            >
+
+            <button type="submit">
+
+                Publicar Cartinha
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+
+const inputImagem =
+    document.querySelector(
+        '#id_imagem'
+    );
+
+const preview =
+    document.querySelector(
+        '#preview-imagem'
+    );
+
+if (inputImagem) {
+
+    inputImagem.addEventListener(
+        'change',
+        function () {
+
+            const arquivo =
+                this.files[0];
+
+            if (arquivo) {
+
+                preview.src =
+                    URL.createObjectURL(
+                        arquivo
+                    );
+
+                preview.style.display =
+                    'block';
+            }
+        }
+    );
+}
+
+</script>
+
+{% endblock %}

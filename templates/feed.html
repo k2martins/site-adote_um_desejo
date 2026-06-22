@@ -1,0 +1,364 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>
+    Cartinhas
+</h1>
+
+<!-- BOTÃO CRIAR -->
+<div class="criar-carta-box">
+
+    <a
+        href="{% url 'criar_carta' %}"
+        class="btn-criar"
+    >
+
+        Criar Cartinha
+
+    </a>
+
+</div>
+
+<!-- PESQUISA -->
+<div class="pesquisa-box">
+
+    <form method="GET">
+
+        <input
+            type="text"
+            name="pesquisa"
+            placeholder="Pesquisar por palavras..."
+            value="{{ request.GET.pesquisa }}"
+        >
+
+        <input
+            type="text"
+            name="cidade"
+            placeholder="Cidade"
+            value="{{ request.GET.cidade }}"
+        >
+
+        <input
+            type="text"
+            name="estado"
+            placeholder="Estado"
+            value="{{ request.GET.estado }}"
+        >
+
+        <select name="adotado">
+
+            <option value="">
+                Todos
+            </option>
+
+            <option
+                value="sim"
+                {% if request.GET.adotado == 'sim' %}
+                    selected
+                {% endif %}
+            >
+                Adotados
+            </option>
+
+            <option
+                value="nao"
+                {% if request.GET.adotado == 'nao' %}
+                    selected
+                {% endif %}
+            >
+                Não adotados
+            </option>
+
+        </select>
+
+        <button type="submit">
+
+            Pesquisar
+
+        </button>
+
+    </form>
+
+</div>
+
+<!-- CARTINHAS -->
+{% for carta in cartas %}
+
+    <div class="card">
+
+        <!-- TÍTULO -->
+        <h2>
+
+            <a href="{% url 'detalhe_carta' carta.id %}">
+
+                {{ carta.titulo }}
+
+            </a>
+
+        </h2>
+
+        <!-- AUTOR -->
+        <p class="card-autor">
+
+            💜
+            {{ carta.autor.username }}
+
+        </p>
+
+        <!-- LOCAL -->
+        <p class="card-local">
+
+            📍
+            {{ carta.cidade }}
+            -
+            {{ carta.estado }}
+
+        </p>
+
+        <!-- IMAGEM -->
+        {% if carta.imagem %}
+
+            <img
+                src="{{ carta.imagem.url }}"
+                class="card-imagem"
+            >
+
+        {% endif %}
+
+        <!-- TEXTO -->
+        <p class="card-texto">
+
+            {{ carta.texto|truncatewords:40 }}
+
+        </p>
+
+        <!-- CURTIDAS -->
+        <div class="card-info">
+
+            ❤️
+            {{ carta.curtidas.count }}
+            curtida{{ carta.curtidas.count|pluralize }}
+
+        </div>
+
+        <!-- AÇÕES -->
+        <div class="card-acoes">
+
+            <!-- CURTIR -->
+            {% if user.is_authenticated %}
+
+                <form
+                    action="{% url 'curtir_carta' carta.id %}"
+                    method="POST"
+                >
+
+                    {% csrf_token %}
+
+                    {% if carta.usuario_curtiu %}
+
+                        <button
+                            type="submit"
+                            class="btn-descurtir"
+                        >
+
+                            💔 Descurtir
+
+                        </button>
+
+                    {% else %}
+
+                        <button
+                            type="submit"
+                            class="btn-curtir"
+                        >
+
+                            ❤️ Curtir
+
+                        </button>
+
+                    {% endif %}
+
+                </form>
+
+            {% endif %}
+
+            <!-- VER DETALHES -->
+            <a
+                href="{% url 'detalhe_carta' carta.id %}"
+                class="btn-detalhes"
+            >
+
+                Ler Mais
+
+            </a>
+
+        </div>
+
+        <!-- STATUS -->
+        {% if carta.correspondido %}
+
+            <div class="correspondido-badge">
+
+                🎉 Desejo Correspondido
+
+            </div>
+
+        {% elif carta.adotado %}
+
+            <div class="adotado-badge">
+
+                ❤️ Desejo Adotado
+
+            </div>
+
+        {% endif %}
+
+        <!-- ADOÇÃO -->
+        {% if request.user != carta.autor %}
+
+            <div class="adocao-box">
+
+                {% if carta.correspondido %}
+
+                    <button disabled>
+
+                        Desejo Já Realizado
+
+                    </button>
+
+                {% elif carta.adotado %}
+
+                    {% if carta.adocao.usuario == request.user %}
+
+                        <form
+                            action="{% url 'adotar_carta' carta.id %}"
+                            method="POST"
+                        >
+
+                            {% csrf_token %}
+
+                            <button type="submit">
+
+                                Desistir da Adoção
+
+                            </button>
+
+                        </form>
+
+                    {% else %}
+
+                        <button disabled>
+
+                            Já Adotado
+
+                        </button>
+
+                    {% endif %}
+
+                {% else %}
+
+                    <form
+                        action="{% url 'adotar_carta' carta.id %}"
+                        method="POST"
+                    >
+
+                        {% csrf_token %}
+
+                        <button type="submit">
+
+                            💜 Adotar Desejo
+
+                        </button>
+
+                    </form>
+
+                {% endif %}
+
+            </div>
+
+        {% endif %}
+
+        <!-- COMENTÁRIOS -->
+        <div class="comentarios-box">
+
+            <h3>
+
+                💬 Comentários
+
+            </h3>
+
+            {% if user.is_authenticated %}
+
+                <form
+                    action="{% url 'comentar_carta' carta.id %}"
+                    method="POST"
+                    class="comentario-form"
+                >
+
+                    {% csrf_token %}
+
+                    <input
+                        type="text"
+                        name="texto"
+                        placeholder="Escreva um comentário..."
+                        required
+                    >
+
+                    <button type="submit">
+
+                        Comentar
+
+                    </button>
+
+                </form>
+
+            {% endif %}
+
+            {% for comentario in carta.comentario_set.all %}
+
+                <div class="comentario-item">
+
+                    <strong>
+
+                        {{ comentario.usuario.username }}
+
+                    </strong>
+
+                    <p>
+
+                        {{ comentario.texto }}
+
+                    </p>
+
+                </div>
+
+            {% empty %}
+
+                <p>
+
+                    Nenhum comentário ainda.
+
+                </p>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+{% empty %}
+
+    <div class="card">
+
+        <h2>
+
+            Nenhuma cartinha encontrada.
+
+        </h2>
+
+    </div>
+
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="perfil-page">
+
+    <!-- CARD PERFIL -->
+    <div class="perfil-card">
+
+        {% if perfil.foto %}
+
+            <img
+                src="{{ perfil.foto.url }}"
+                class="perfil-foto"
+            >
+
+        {% else %}
+
+            <img
+                src="https://via.placeholder.com/150"
+                class="perfil-foto"
+            >
+
+        {% endif %}
+
+        <h1>
+            {{ request.user.username }}
+        </h1>
+
+        <p class="perfil-bio">
+
+            {% if perfil.bio %}
+
+                {{ perfil.bio }}
+
+            {% else %}
+
+                Nenhuma biografia ainda.
+
+            {% endif %}
+
+        </p>
+
+        <div class="perfil-local">
+
+            📍
+
+            {{ perfil.cidade }}
+            -
+            {{ perfil.estado }}
+
+        </div>
+
+        <a
+            href="{% url 'editar_perfil' %}"
+            class="btn-editar"
+        >
+
+            Editar Perfil
+
+        </a>
+
+    </div>
+
+    <!-- CARTINHAS -->
+    <div class="perfil-cartas">
+
+        <h2>
+            Minhas Cartinhas
+        </h2>
+
+        {% for carta in request.user.carta_set.all %}
+
+            <div class="card">
+
+                {% if carta.imagem %}
+
+                    <img
+                        src="{{ carta.imagem.url }}"
+                        class="card-img"
+                    >
+
+                {% endif %}
+
+                <h3>
+
+                    <a href="{% url 'detalhe_carta' carta.id %}">
+
+                        {{ carta.titulo }}
+
+                    </a>
+
+                </h3>
+
+                <p>
+                    {{ carta.texto }}
+                </p>
+
+                <p>
+
+                    ❤️ Curtidas:
+                    {{ carta.curtidas.count }}
+
+                </p>
+
+                {% if carta.adotado %}
+
+                    <p class="adotado">
+
+                        💜 Desejo Adotado
+
+                    </p>
+
+                {% endif %}
+
+                {% if carta.correspondido %}
+
+                    <p class="correspondido-badge">
+
+                        🎉 Desejo Correspondido
+
+                    </p>
+
+                {% endif %}
+
+                <!-- AÇÕES -->
+                <div class="acoes-autor">
+
+                    {% if not carta.correspondido %}
+
+                        <form
+                            action="{% url 'correspondido_carta' carta.id %}"
+                            method="POST"
+                        >
+
+                            {% csrf_token %}
+
+                            <button
+                                class="btn-correspondido"
+                            >
+
+                                🎉 Marcar Correspondido
+
+                            </button>
+
+                        </form>
+
+                    {% endif %}
+
+                    <form
+                        action="{% url 'apagar_carta' carta.id %}"
+                        method="POST"
+                    >
+
+                        {% csrf_token %}
+
+                        <button
+                            class="btn-apagar"
+                        >
+
+                            🗑️ Apagar Cartinha
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <p>
+                Você ainda não publicou cartinhas.
+            </p>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

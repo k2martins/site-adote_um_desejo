@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="auth-container">
+
+    <div class="auth-card">
+
+        <h1>
+            Entrar
+        </h1>
+
+        <p class="auth-subtitle">
+            Entre para continuar espalhando esperança.
+        </p>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <input
+                type="text"
+                name="username"
+                placeholder="Usuário"
+                required
+            >
+
+            <input
+                type="password"
+                name="senha"
+                placeholder="Senha"
+                required
+            >
+
+            <button type="submit">
+                Entrar
+            </button>
+
+        </form>
+
+        <p class="auth-link">
+
+            <a href="{% url 'password_reset' %}">
+                Esqueci minha senha
+            </a>
+
+        </p>
+
+        <p class="auth-link">
+
+            Ainda não possui conta?
+
+            <a href="{% url 'cadastro' %}">
+                Criar Conta
+            </a>
+
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}

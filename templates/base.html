@@ -1,0 +1,202 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Adote Um Desejo
+    </title>
+
+    <!-- CSS -->
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}"
+    >
+
+    <!-- FAVICON -->
+    <link
+        rel="icon"
+        href="{% static 'img/favicon.ico' %}"
+    >
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+
+    <!-- LOGO -->
+    <div class="logo-area">
+
+        <img
+            src="{% static 'img/logo.png' %}"
+            class="logo-img"
+        >
+
+        <h2>
+            Adote Um Desejo
+        </h2>
+
+    </div>
+
+    <!-- LINKS -->
+    <div class="nav-links">
+
+        <a href="{% url 'home' %}">
+            Home
+        </a>
+
+        <a href="{% url 'feed' %}">
+            Cartinhas
+        </a>
+
+        <a href="{% url 'faq' %}">
+            Dúvidas Frequentes
+        </a>
+
+        {% if request.user.is_authenticated %}
+
+            <a href="{% url 'perfil' %}">
+                Meu Perfil
+            </a>
+
+            <!-- NOTIFICAÇÕES -->
+            <div class="notificacao-area">
+
+                <button
+                    class="notif-btn"
+                    onclick="toggleNotificacoes()"
+                >
+
+                    🔔
+
+                </button>
+
+                <div
+                    id="notif-box"
+                    class="notif-box"
+                >
+
+                    <h3>
+                        Notificações
+                    </h3>
+
+                    {% for notificacao in notificacoes_recentes %}
+
+                        <div class="notif-item">
+
+                            {{ notificacao.mensagem }}
+
+                        </div>
+
+                    {% empty %}
+
+                        <div class="notif-vazio">
+
+                            Nenhuma notificação
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+            <a
+                href="{% url 'logout' %}"
+                class="nav-btn"
+            >
+
+                Sair
+
+            </a>
+
+        {% else %}
+
+            <a
+                href="{% url 'login' %}"
+                class="nav-btn"
+            >
+
+                Entrar
+
+            </a>
+
+            <a
+                href="{% url 'cadastro' %}"
+                class="nav-btn destaque"
+            >
+
+                Criar Conta
+
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</nav>
+
+<!-- MENSAGENS -->
+{% if messages %}
+
+    <div class="messages">
+
+        {% for message in messages %}
+
+            <div class="message">
+
+                {{ message }}
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% endif %}
+
+<!-- CONTEÚDO -->
+<div class="container">
+
+    {% block content %}
+    {% endblock %}
+
+</div>
+
+<script>
+
+function toggleNotificacoes() {
+
+    const box = document.getElementById(
+        'notif-box'
+    );
+
+    if (
+        box.style.display === 'block'
+    ) {
+
+        box.style.display = 'none';
+
+    } else {
+
+        box.style.display = 'block';
+    }
+}
+
+</script>
+
+</body>
+
+</html>
